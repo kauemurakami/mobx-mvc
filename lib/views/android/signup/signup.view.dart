@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:mobx_mvc/controllers/signup.controller.dart';
 import 'package:mobx_mvc/view-models/signup.viewmodel.dart';
 import 'package:mobx_mvc/views/android/home/home.view.dart';
+import 'package:mobx_mvc/stores/app.store.dart';
+import 'package:provider/provider.dart';
 
 class SignupView extends StatefulWidget {
   @override
@@ -10,13 +12,12 @@ class SignupView extends StatefulWidget {
 
 class _SignupViewState extends State<SignupView> {
   final _formKey = GlobalKey<FormState>();
-
   final _controller = SignupController();
-
   var model = SignupViewModel();
 
   @override
   Widget build(BuildContext context) {
+  var store = Provider.of<AppStore>(context);
     return Scaffold(
       body: SingleChildScrollView(
           child: Padding(
@@ -108,11 +109,13 @@ class _SignupViewState extends State<SignupView> {
                         setState(() {
                           _controller.create(model).then((value) {
                             setState(() {
+                              store.setUser(value.name, value.email,
+                                  value.picture, value.token);
                               Navigator.push(
-                                context, 
-                                MaterialPageRoute(
-                                builder: (context) => HomeView(),
-                              ));
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomeView(),
+                                  ));
                             });
                           });
                         });
